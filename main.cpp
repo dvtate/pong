@@ -1,11 +1,20 @@
 #include <SDL/SDL.h>
 #include <stdint.h>
-#include <stdlib.h> //atoi
+#include <stdlib.h> // atoi
+#include <string.h> // strcmp
 #include <iostream>
 
 #define FPS 100
+#define SCREEN_HEIGHT 1024
+#define SCREEN_WIDTH 600
 
 bool isInteger(char*);
+
+
+uint16_t screenHeight, screenWidth;
+uint8_t difficulty;
+
+void getCommandLineArgs()
 
 
 int main(int argc, char* args[]){
@@ -24,12 +33,7 @@ int main(int argc, char* args[]){
 	SDL_Surface* screen;
 
 	// height and width could come from the command line
-	if (argc == 3) {
-		char* x = args[1];
-		screen = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE/*|SDL_FULLSCREEN*/);
-	} else {
-		screen = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE/*|SDL_FULLSCREEN*/);
-	}
+	screen = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE/*|SDL_FULLSCREEN*/);
 
 	uint32_t frameStartTime;
 
@@ -52,13 +56,17 @@ int main(int argc, char* args[]){
 
 	struct arrowKeyVals {
 		bool up, down, left, right;
-	} arrows;
+	};
+	arrowKeyVals arrows[2];
 
-	arrows.up = false;
-	arrows.down = false;
-	arrows.left = false;
-	arrows.right = false;
-
+	arrows[0].up = false;
+	arrows[0].down = false;
+	arrows[0].left = false;
+	arrows[0].right = false;
+	arrows[1].up = false;
+	arrows[1].down = false;
+	arrows[1].left = false;
+	arrows[1].right = false;
 
 
 
@@ -195,13 +203,16 @@ quit_program:
 
 
 bool isInteger(char* str){
+	if (!(*str == '0' || *str == '1' || *str == '2' || *str == '3'
+			|| *str == '4' || *str == '5' || *str == '6' || *str == '7'
+			|| *str == '8' || *str == '9'
+	) || *str == '\0') return false;
 	while (*str != '\0') {
 		if (!(*str == '0' || *str == '1' || *str == '2' || *str == '3'
 			|| *str == '4' || *str == '5' || *str == '6' || *str == '7'
 			|| *str == '8' || *str == '9'
 		)) return false;
-		if (*str == '\0') return true;
+		str++; // next char
 	}
 	return true;
 }
-
