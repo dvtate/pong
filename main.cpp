@@ -5,24 +5,21 @@
 #include <iostream>
 
 #define FPS 100
-#define SCREEN_HEIGHT 1024
-#define SCREEN_WIDTH 600
-
-bool isInteger(char*);
 
 
-uint16_t screenHeight, screenWidth;
-uint8_t difficulty;
+const uint16_t screenHeight = 1080, screenWidth = 1920;
 
-void getCommandLineArgs()
+
+#include "paddle.h"
+
+
+
+uint8_t difficulty = 2;
+
+
 
 
 int main(int argc, char* args[]){
-
-
-	std::cout <<"Pong:\n";
-
-
 
 
 
@@ -33,16 +30,8 @@ int main(int argc, char* args[]){
 	SDL_Surface* screen;
 
 	// height and width could come from the command line
-	screen = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE/*|SDL_FULLSCREEN*/);
+	screen = SDL_SetVideoMode(screenWidth, screenHeight, 32, SDL_SWSURFACE|SDL_FULLSCREEN);
 
-	uint32_t frameStartTime;
-
-
-	SDL_Rect rect;
-	rect.x = 10;
-	rect.y = 20;
-	rect.h = 30;
-	rect.w = 40;
 
 
 	const uint32_t black = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
@@ -55,19 +44,19 @@ int main(int argc, char* args[]){
 
 
 	struct arrowKeyVals {
-		bool up, down, left, right;
+		bool up, down;
 	};
 	arrowKeyVals arrows[2];
 
 	arrows[0].up = false;
 	arrows[0].down = false;
-	arrows[0].left = false;
-	arrows[0].right = false;
+
 	arrows[1].up = false;
 	arrows[1].down = false;
-	arrows[1].left = false;
-	arrows[1].right = false;
 
+
+
+	Paddle player1(10, 10, 500 / difficulty), player2(screenWidth - Paddle::paddleWidth - 10, 10, 500 / difficulty);
 
 
 
@@ -75,14 +64,14 @@ int main(int argc, char* args[]){
 	for (uint32_t frameNumber;true;frameNumber++) {
 
 		// get start time
-		frameStartTime = SDL_GetTicks();
+		uint32_t frameStartTime = SDL_GetTicks();
 
 
 		SDL_Event event;
 
 
 
-		while (SDL_PollEvent(&event))  {
+		while (SDL_PollEvent(&event)) {
 
 
 			// event handling
@@ -96,23 +85,25 @@ int main(int argc, char* args[]){
 				// a key has been pressed
 				switch (event.key.keysym.sym) {
 
+				// player1
+				case SDLK_w:
+					arrows[0].up = true;
+					break;
+				case SDLK_s:
+					arrows[0].down = true;
+					break;
+
+				// player2
 				case SDLK_UP:
-					arrows.up = true;
+					arrows[1].up = true;
 					break;
-
 				case SDLK_DOWN:
-					arrows.down = true;
+					arrows[1].down = true;
 					break;
 
-				case SDLK_LEFT:
-					arrows.left = true;
-					break;
 
-				case SDLK_RIGHT:
-					arrows.right = true;
-					break;
-
-				case SDLK_q:
+				// exit
+				case SDLK_q: case SDLK_ESCAPE:
 					goto quit_program;
 					break;
 
@@ -123,52 +114,39 @@ int main(int argc, char* args[]){
 				// a key has been pressed
 				switch (event.key.keysym.sym) {
 
+				// player1
+				case SDLK_w:
+					arrows[0].up = false;
+					break;
+				case SDLK_s:
+					arrows[0].down = false;
+					break;
+
+				// player2
 				case SDLK_UP:
-					arrows.up = false;
+					arrows[1].up = false;
 					break;
-
 				case SDLK_DOWN:
-					arrows.down = false;
-					break;
-
-				case SDLK_LEFT:
-					arrows.left = false;
-					break;
-
-				case SDLK_RIGHT:
-					arrows.right = false;
+					arrows[1].down = false;
 					break;
 
 				}
 				break;
 			}
-
-
-
 		}
 
+		player1.moveUpDown(arrows[0].up, arrows[0].down);
+		player2.moveUpDown(arrows[1].up, arrows[1].down);
 
-
-
-
-
-
-		if (arrows.up)
-			rect.y--;
-		if (arrows.down)
-			rect.y++;
-		if (arrows.left)
-			rect.x--;
-		if (arrows.right)
-			rect.x ++;
 
 
 
 		// set screen background color to black
 		SDL_FillRect(screen, &screen->clip_rect, black);
 
-		// add the rectangle to the render list
-		SDL_FillRect(screen, &rect, white);
+		// add paddles to render list
+		SDL_FillRect(screen, &player1.rect, white);
+		SDL_FillRect(screen, &player2.rect, white);
 
 		// render
 		SDL_Flip(screen);
@@ -184,10 +162,6 @@ int main(int argc, char* args[]){
 
 
 
-
-
-
-
 // the program has been closed
 quit_program:
 	SDL_FreeSurface(screen);
@@ -197,22 +171,7 @@ quit_program:
 
 
 	return 0;
-}
 
 
+} // main
 
-
-bool isInteger(char* str){
-	if (!(*str == '0' || *str == '1' || *str == '2' || *str == '3'
-			|| *str == '4' || *str == '5' || *str == '6' || *str == '7'
-			|| *str == '8' || *str == '9'
-	) || *str == '\0') return false;
-	while (*str != '\0') {
-		if (!(*str == '0' || *str == '1' || *str == '2' || *str == '3'
-			|| *str == '4' || *str == '5' || *str == '6' || *str == '7'
-			|| *str == '8' || *str == '9'
-		)) return false;
-		str++; // next char
-	}
-	return true;
-}
