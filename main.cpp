@@ -11,7 +11,7 @@ const uint16_t screenHeight = 1080, screenWidth = 1920;
 
 
 #include "paddle.h"
-
+#include "ball.h"
 
 
 uint8_t difficulty = 2;
@@ -56,9 +56,10 @@ int main(int argc, char* args[]){
 
 
 
-	Paddle player1(10, 10, 500 / difficulty), player2(screenWidth - Paddle::paddleWidth - 10, 10, 500 / difficulty);
+	Paddle player1(10, 10, 500 / difficulty),
+		player2(screenWidth - Paddle::paddleWidth - 10, 10, 500 / difficulty);
 
-
+	Ball ball(screenWidth / 2, screenHeight / 2);
 
 	// main loop
 	for (uint32_t frameNumber;true;frameNumber++) {
