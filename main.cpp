@@ -4,7 +4,7 @@
 #include <string.h> // strcmp
 #include <iostream>
 
-#define FPS 100
+#define FPS 200000000000000000
 
 
 const uint16_t screenHeight = 1080, screenWidth = 1920;
@@ -105,6 +105,8 @@ int main(int argc, char* args[]){
 
 				// exit
 				case SDLK_q: case SDLK_ESCAPE:
+					// for those mad that I'm using a goto...
+					// remember that a goto gets translated to `jmp`
 					goto quit_program;
 					break;
 
@@ -140,14 +142,15 @@ int main(int argc, char* args[]){
 		player2.moveUpDown(arrows[1].up, arrows[1].down);
 
 
-
-
 		// set screen background color to black
 		SDL_FillRect(screen, &screen->clip_rect, black);
 
 		// add paddles to render list
 		SDL_FillRect(screen, &player1.rect, white);
 		SDL_FillRect(screen, &player2.rect, white);
+
+		// add ball to render list
+		SDL_FillRect(screen, &ball.rect, white);
 
 		// render
 		SDL_Flip(screen);
