@@ -5,6 +5,7 @@
 
 #include <SDL/SDL.h>
 
+#include "ball.h"
 
 extern uint8_t difficulty;
 extern const uint16_t screenHeight;
@@ -64,6 +65,10 @@ public:
 			change += 1;
 
 		moveUpDown(change);
+	}
+
+	bool isTouching(const Ball& ball){
+
 	}
 };
 
