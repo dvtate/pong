@@ -1,0 +1,37 @@
+## ball.ys
+
+{ # change ball slope/speed when it bounces off a surface
+	{ # not bouncing off anything, just need to change trajectory	
+		
+	} else { # bouncing off left paddle
+		{ # random bolean false go to right
+			$ball_slope (random 5 * 1 + int, random 5 * 1 + int) =
+		} else { # random boolean true go to left
+			$ball_slope (random -5 * 1 - int, random 5 * 1 + int) =
+		} random int if
+	} $ball_pos 0 ] 1   == elseif { # bouncing off left bumper
+
+	} $ball_pos 0 ] 199 == elseif { # bouncing off right bumper
+
+	} $ball_pos 1 ] 1   == elseif { # bouncing off top wall
+
+	} $ball_pos 1 ] 49  == if # bouncing off bottom wall
+
+
+} ($ball_slope, ($ball_pos, { $ball_pos (100,25) = })) lam $ball_bounce =
+
+{ # update ball's pos
+	# if the ball is on the edge, bounce
+	{ 
+		($ball_slope, $ball_pos) $ball_bounce @	
+	}
+		$ball_pos 0 ] 1   <=
+		$ball_pos 0 ] 199 >= ||
+		$ball_pos 1 ] 1   <= ||
+		$ball_pos 1 ] 49  >= ||
+	if
+
+	$ball_pos 0 ] $ball_slope 0 ] +=
+	$ball_pos 1 ] $ball_slope 1 ] +=
+} ($ball_pos, $ball_slope) lam $update_ball =
+

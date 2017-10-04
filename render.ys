@@ -1,0 +1,55 @@
+# render.ys
+
+{ # draw the game to the screen
+
+	# clear screen
+	cls
+
+	{ # print top border
+		"====" print
+	} 0 50 range $xc foreach
+	"" println
+
+
+	{ # foreach row
+
+		{
+			" " print
+		} else {
+			"#" print
+		} $r $p1_pos - 10 < if
+		
+		{
+			{
+				" " print
+			} 0 198 range $x foreach
+		} else {
+			{ # print spaces until we get to the ball
+				" " print
+			} 0 $ball_pos 0 ] range $x foreach
+			
+			# print the ball
+			"O" print
+
+			{ # print spaces to the end
+				" " print
+			} $ball_pos 0 ] 197 range $x foreach
+		} $r $ball_pos 1 ] == if
+
+		{
+			" " print
+		} else {
+			"#" print
+		} $r 10 + $p1_pos > if
+
+		"" println
+	} 0 50 range $r foreach
+
+	{ # print bottom border
+		"====" print
+	} 0 50 range $xc foreach
+	"" println
+
+
+
+} ($p1_pos, $p2_pos, $p1_score, $p2_score, $ball_pos, ($msg, { $msg "" = })) lam $draw_game =

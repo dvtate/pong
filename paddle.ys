@@ -1,0 +1,27 @@
+## paddle.ys
+
+"ball.ys" insert
+
+{
+	$input getch =
+	{ # p1 down
+		{ } else { # if safe to move
+			$p1_pos -- 
+		} $p1_pos 0 > if		
+	} "z" $input == elseif { # p1 up
+			$p1_pos ++ 
+		} $p1_pos 40 < if		
+	} "a" $input == elseif { # p2 down
+		{ # if its safe to move
+			$p2_pos -- 
+		} $p2_pos 0 > if
+	} "/" $input == elseif { # p2 up
+		{ # if safe to move
+			$p2_pos ++
+		} $p2_pos 40 < if
+	} "'" $input == elseif { # reset ball
+		($ball_slope) $ball_bounce @
+	} " " $input == if
+		
+} ($p1_pos , $p2_pos, $ball_slope) lam $update_paddles = 
+
